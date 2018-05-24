@@ -27,6 +27,15 @@
                     </a>
 
                 <% } %>
+
+                <% if (isAdmin || isQuizAuthor) { %>
+
+                <a href="/quizzes/<%= quizId %>/tips/<%= tip.id %>?_method=edit">
+                    <button>Edit</button>
+                </a>
+
+                <% } %>
+
             </li>
         <% } %>
     <% } %>

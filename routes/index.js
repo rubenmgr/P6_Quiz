@@ -124,6 +124,9 @@ router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 router.get('/quizzes/randomplay/',           quizController.randomplay);
 router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
 
+// Añado rutas necesaruas para editar el texto de las pistas:
+router.get('/quizzes/:quizId/tips/:tipId/edit');
+router.put('/quizzes/:quizId/tips/:tipId');
 
 
 router.post('/quizzes/:quizId(\\d+)/tips',

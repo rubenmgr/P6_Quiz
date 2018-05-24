@@ -75,3 +75,35 @@ exports.destroy = (req, res, next) => {
     .catch(error => next(error));
 };
 
+
+// exports.loginRequired = (req, res, next) => {
+//     if (req.session.user) {
+//         next();
+//     } else {
+//         res.redirect('/session?redir=' + (req.param('redir') || req.url));
+//     }
+// };
+//
+exports.adminOrAuthorRequired = (req, res, next) => {
+
+    const isAdmin  = !!req.session.user.isAdmin;
+    const isAuthor = req.quiz.authorId === req.session.user.id;
+
+    if (isAdmin || isAuthor) {
+        next();
+    } else {
+        console.log('Prohibited operation: The logged in user is not the author of the quiz, nor an administrator.');
+        res.send(403);
+    }
+};
+// GET /quizzes/:quizId/tips/:tipId/edit
+
+exports.edit = (req, res, next) => {
+
+};
+
+// PUT /quizzes/:quizId/tips/:tipId
+
+exports.update = (req, res, next) => {
+
+};

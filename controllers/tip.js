@@ -76,14 +76,6 @@ exports.destroy = (req, res, next) => {
 };
 
 
-// exports.loginRequired = (req, res, next) => {
-//     if (req.session.user) {
-//         next();
-//     } else {
-//         res.redirect('/session?redir=' + (req.param('redir') || req.url));
-//     }
-// };
-//
 exports.adminOrAuthorRequired = (req, res, next) => {
 
     const isAdmin  = !!req.session.user.isAdmin;
@@ -99,11 +91,38 @@ exports.adminOrAuthorRequired = (req, res, next) => {
 // GET /quizzes/:quizId/tips/:tipId/edit
 
 exports.edit = (req, res, next) => {
+    const quiz = req.quiz;
+    const tip = req.tip;
+    res.render('tips/edit', {
+        quiz,
+        tip
+    });
 
 };
 
 // PUT /quizzes/:quizId/tips/:tipId
 
 exports.update = (req, res, next) => {
+
+    const quiz = req.quiz;
+    const tip = req.tip;
+    tip.text = req.body.text;
+
+    tip.accepted = false;
+
+    tip.save({fields: ["text", "accepted"]})
+        .then(tip => {
+            req.flash('success', 'Tip edited successfully.');
+            res.redirect('/quizzes/' + quiz.id);
+        })
+        .catch(Sequelize.ValidationError, error => {
+            req.flash('error', 'There are errors in the form:');
+            error.errors.forEach(({message}) => req.flash('error', message));
+            res.render('tips/edit', {quiz, tip});
+        })
+        .catch(error => {
+            req.flash('error', 'Error editing the Quiz: ' + error.message);
+            next(error);
+        });
 
 };
